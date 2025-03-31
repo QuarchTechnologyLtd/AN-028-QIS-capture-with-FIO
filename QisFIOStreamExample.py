@@ -184,7 +184,8 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
     )
 
     # Here we use quarchpy display table function to nicely output the location of the 3 data file for the user to look at.
-    my_list2d = [["Qis Data", qisFilePath], ["FIO Data", fIOOutputPath[1:-1]], ["Merged Data", merge_file_location]]
+    file_paths = [["Qis Data", qisFilePath], ["FIO Data", fIOOutputPath[1:-1]], ["Merged Data", merge_file_location]]
+
     displayTable(my_list2d)
 
 def runFIO(mode, arguments="", file_name=""):
