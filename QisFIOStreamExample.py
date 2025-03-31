@@ -123,7 +123,8 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
         None
     """
 
-    #Creating the qis file path
+    # Creating the qis file path
+
     streamFileName = 'QIS_Stream_' + str(datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")) + '.csv'
     qisFilePath = os.path.join(streamDirectory, streamFileName)
     #Create the FIO output path
