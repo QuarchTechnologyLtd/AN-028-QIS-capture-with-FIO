@@ -174,11 +174,11 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
     # Stop the stream.  This function is blocking and will wait until all remaining data has been downloaded from the module
     module.stopStream()
     stop_stream_time = time.time()
-    while (True):
+    while (True): # wait until stream status returns "stopped" or we time out
         stream_status=module.streamRunningStatus()
         elapsed_time= time.time() - stop_stream_time
         timeout = 10
-        if "stopped" in stream_status.lower() or elapsed_time-stop_stream_time > 20:
+        if "stopped" in stream_status.lower() or elapsed_time-stop_stream_time > timeout:
             break
 
         time.sleep(0.3)
@@ -200,6 +200,7 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
 def runFIO(mode, arguments="", file_name=""):
     """
     Completes some necessary argument processing before passing them on to start_fio
+    This function is a stripped back version of what you will find in quarchpy/fio/fio_interface.py customised for this example
     Args:
         mode:
         arguments:
@@ -209,7 +210,7 @@ def runFIO(mode, arguments="", file_name=""):
 
     """
     try:
-        xrange
+        xrange # Python 2 compatibility
     except NameError:
         xrange = range
     for i in xrange(0, len(arguments)):
@@ -224,10 +225,11 @@ def runFIO(mode, arguments="", file_name=""):
     start_fio(output_file, mode, arguments_ori, file_name)
 
 
-
 def start_fio(output_file, mode, options, fileName=""):
     """
-    Usese the provided arguments to start an FIO workload.
+    Uses the provided arguments to start an FIO workload.
+    This function is a stripped back version of what you will find in quarchpy/fio/fio_interface.py customised for this example
+
     Args:
         output_file:
         mode:
