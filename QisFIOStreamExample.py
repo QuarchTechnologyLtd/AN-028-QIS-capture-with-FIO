@@ -59,8 +59,8 @@ def main():
     #testDirectory = input("Please enter the FIO test directory \n>")
     testDirectory = "C\:\\temp"
 
-    print("\n\nQuarch application note example: AN-028")
-    print("---------------------------------------\n\n")
+    displayTable("Quarch application note example: AN-028") #Print the title in a one cell table. Looks nice.
+
     # Start QIS (if it is already running, skip this step and also avoid closing it at the end)
     closeQisAtEndOfTest = False
     if isQisRunning() == False:
@@ -84,10 +84,10 @@ def main():
     myPowerDevice = quarchPPM(myQuarchDevice, skipDefaultSyntheticChannels=True)
 
     # This ensures the latest stream header is used, even for older devices.  This will soon become the default, but is in here for now
-    # as is ensures the output CSV is in the latest format with units added to the row headers.
+    # as it ensures the output CSV is in the latest format with units added to the row headers.
     myPowerDevice.sendCommand("stream mode header v3")
     # These are optional commands which create additional channels in the output for power (current * voltage) and total power 
-    # (sum of individual power channels).  This can be useful if you don't want to calculate it in post processing
+    # (sum of individual power channels).  This can be useful if you don't want to calculate it in post-processing
     myPowerDevice.sendCommand("stream mode power enable")
     myPowerDevice.sendCommand("stream mode power total enable")
 
@@ -173,8 +173,15 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
 
     # Stop the stream.  This function is blocking and will wait until all remaining data has been downloaded from the module
     module.stopStream()
-    time.sleep(1)
+    stop_stream_time = time.time()
+    while (True):
+        stream_status=module.streamRunningStatus()
+        elapsed_time= time.time() - stop_stream_time
+        timeout = 10
+        if "stopped" in stream_status.lower() or elapsed_time-stop_stream_time > 20:
+            break
 
+        time.sleep(0.3)
     print("Merging QIS and FIO data into one csv file.")
     merge_file_location =  merge_fio_qis_stream(
         qis_stream_file=streamFileName,
