@@ -189,7 +189,7 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
 
 def runFIO(mode, arguments="", file_name=""):
     """
-    Completes some nessisary argument processing before passing them on to start_fio
+    Completes some necessary argument processing before passing them on to start_fio
     Args:
         mode:
         arguments:
