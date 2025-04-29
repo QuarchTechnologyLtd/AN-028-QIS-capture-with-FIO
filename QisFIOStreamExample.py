@@ -1,9 +1,9 @@
 '''
 
-
 ########### VERSION HISTORY ###########
 
 28/01/2025 - Stuart Boon
+29/04/2025 - Stuart Boon
 
 ########### REQUIREMENTS ###########
 
@@ -27,7 +27,6 @@
 Optional
 4. Open the produced output files from QIS/FIO
 5. Edit the FIO arguments to your desired test, change the test directory.
-6.
 
 ####################################
 '''
@@ -118,13 +117,11 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
         module: The quarch module you would like to stream with.
         testDirectory: The test directory for writing FIO data to.
         streamDirectory: The stream directory for QIS to write stream data to.
-
     Returns:
         None
     """
 
     # Creating the qis file path
-
     streamFileName = 'QIS_Stream_' + str(datetime.datetime.now().strftime("%m-%d-%Y_%H-%M-%S")) + '.csv'
     qisFilePath = os.path.join(streamDirectory, streamFileName)
     #Create the FIO output path
@@ -174,26 +171,25 @@ def qis_stream_and_FIO_example(module, testDirectory, streamDirectory):
     # Stop the stream.  This function is blocking and will wait until all remaining data has been downloaded from the module
     module.stopStream()
     stop_stream_time = time.time()
-    while (True): # wait until stream status returns "stopped" or we time out
-        stream_status=module.streamRunningStatus()
-        elapsed_time= time.time() - stop_stream_time
+    while (True):  # wait until stream status returns "stopped" or we time out
+        stream_status = module.streamRunningStatus()
+        elapsed_time = time.time() - stop_stream_time
         timeout = 10
-        if "stopped" in stream_status.lower() or elapsed_time-stop_stream_time > timeout:
+        if "stopped" in stream_status.lower() or elapsed_time - stop_stream_time > timeout:
             break
-
         time.sleep(0.3)
+
     print("Merging QIS and FIO data into one csv file.")
     merge_file_location =  merge_fio_qis_stream(
-        qis_stream_file=streamFileName,
+        qis_stream_file=qisFilePath,
         fio_output_file=fIOOutputPath[1:-1],
         unix_stream_start_time=str(streamStartTime)+"nS",
         rounding_option="round",  # or "insert",
-        output_file=streamFileName.replace(".csv","")+"_merged_with_fio.csv"
+        output_file=qisFilePath.replace(".csv","")+"_merged_with_fio.csv"
     )
 
     # Here we use quarchpy display table function to nicely output the location of the 3 data file for the user to look at.
     file_paths = [["Qis Data", qisFilePath], ["FIO Data", fIOOutputPath[1:-1]], ["Merged Data", merge_file_location]]
-
     displayTable(file_paths)
 
 
@@ -205,9 +201,7 @@ def runFIO(mode, arguments="", file_name=""):
         mode:
         arguments:
         file_name:
-
     Returns:
-
     """
     try:
         xrange # Python 2 compatibility
@@ -229,7 +223,6 @@ def start_fio(output_file, mode, options, fileName=""):
     """
     Uses the provided arguments to start an FIO workload.
     This function is a stripped back version of what you will find in quarchpy/fio/fio_interface.py customised for this example
-
     Args:
         output_file:
         mode:
